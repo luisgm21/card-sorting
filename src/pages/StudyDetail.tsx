@@ -138,7 +138,7 @@ const StudyDetail = () => {
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
-    if (tab === 'participations' && participations.length === 0) loadParticipations();
+    if (tab === 'participations' && participations?.length === 0) loadParticipations();
     if (tab === 'analytics' && !analytics) loadAnalytics();
     if (tab === 'results' && !results) loadResults();
   };
@@ -249,7 +249,7 @@ const StudyDetail = () => {
             <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
               <span>Creado por {study.createdBy?.name}</span>
               <span>{study.totalParticipants} participantes</span>
-              <span>{study.cards.length} tarjetas</span>
+              <span>{study.cards?.length} tarjetas</span>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -300,9 +300,9 @@ const StudyDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Cards */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Tarjetas ({study.cards.length})</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Tarjetas ({study.cards?.length})</h2>
             <div className="space-y-2">
-              {study.cards.map((card, idx) => (
+              {study.cards?.map((card, idx) => (
                 <div key={card.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                   <span className="text-xs font-bold text-gray-400 mt-0.5">{idx + 1}</span>
                   <div>
@@ -318,11 +318,11 @@ const StudyDetail = () => {
 
           {/* Categories and Settings */}
           <div className="space-y-6">
-            {study.predefinedCategories && study.predefinedCategories.length > 0 && (
+            {study.predefinedCategories && study.predefinedCategories?.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Categorías ({study.predefinedCategories.length})</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Categorías ({study.predefinedCategories?.length})</h2>
                 <div className="flex flex-wrap gap-2">
-                  {study.predefinedCategories.map((cat) => (
+                  {study.predefinedCategories?.map((cat) => (
                     <span
                       key={cat.id}
                       className="inline-flex items-center px-3 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-lg"
@@ -365,7 +365,7 @@ const StudyDetail = () => {
 
       {activeTab === 'participations' && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          {participations.length === 0 ? (
+          {!Array.isArray(participations) || participations.length === 0 ? (
             <div className="text-center py-12 text-gray-500">No hay participaciones aún.</div>
           ) : (
             <table className="min-w-full divide-y divide-gray-200">
@@ -427,15 +427,20 @@ const StudyDetail = () => {
         </div>
       )}
 
+
       {activeTab === 'results' && results && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Matriz de Co-ocurrencia</h2>
-          <ResultsMatrix
-            matrix={results.coOccurrenceMatrix}
-            studyTitle={results.studyTitle}
-            totalResponses={results.totalResponses}
-            averageTime={results.averageTime}
-          />
+          {(results.totalResponses === 0 || !results.coOccurrenceMatrix || Object.keys(results.coOccurrenceMatrix).length === 0) ? (
+            <div className="text-center text-gray-500 py-8">Aún no hay respuestas para este estudio.</div>
+          ) : (
+            <ResultsMatrix
+              matrix={results.coOccurrenceMatrix}
+              studyTitle={results.studyTitle}
+              totalResponses={results.totalResponses}
+              averageTime={results.averageTime}
+            />
+          )}
         </div>
       )}
 
