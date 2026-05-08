@@ -64,7 +64,7 @@ const Dashboard = () => {
       if (filterType) params.type = filterType;
       const res = await studiesApi.list(params);
       if (res.success) {
-        setStudies(res.data);
+        setStudies(res.studies);
       }
     } catch (err: any) {
       toast.error('Error al cargar estudios');
