@@ -52,7 +52,7 @@ const StudyForm = ({ initialData, onSubmit, isSubmitting, submitLabel, errors: p
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    updateErrors((prev) => prev.filter((error) => error.field !== name));
+    updateErrors(errors.filter((error) => error.field !== name));
   };
 
   const handleSettingChange = (name: keyof StudySettings, value: any) => {
